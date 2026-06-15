@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kilini Gym — Smart Fitness Platform</title>
+  <meta name="description" content="Kilini Gym — Train smarter, track better, transform faster. A premium smart gym management platform with live status, dynamic tools, and real-time member dashboards." />
+
+  <!-- Preconnect & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <!-- Tailwind CDN Initialization & Configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+              400: '#60a5fa', 500: '#3B82F6', 600: '#2563eb', 700: '#1d4ed8',
+              800: '#1e40af', 900: '#1e3a8a', 950: '#172554'
+            },
+            dark: {
+              50: '#f4f6f9', 100: '#e6e9ef', 200: '#c9ced9', 300: '#9aa3b5',
+              400: '#6b7385', 500: '#4b5366', 600: '#363c4c', 700: '#252a37',
+              800: '#161a24', 900: '#0c0f17', 950: '#05070c'
+            }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
+            arabic: ['"Tajawal"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          boxShadow: {
+            glow: '0 0 40px -8px rgba(59,130,246,0.45)',
+            'glow-lg': '0 0 90px -20px rgba(59,130,246,0.55)',
+            'glass': '0 8px 32px 0 rgba(0,0,0,0.2)'
+          },
+          backgroundSize: { 'grid': '40px 40px' },
+          animation: {
+            blob: 'blob 15s infinite ease-in-out',
+            'blob-slow': 'blob 22s infinite ease-in-out reverse',
+            float: 'float 5s ease-in-out infinite',
+            'float-delay': 'float 6s ease-in-out infinite 1s',
+            marquee: 'marquee 25s linear infinite',
+            'spin-slow': 'spin 10s linear infinite'
+          },
+          keyframes: {
+            blob: {
+              '0%, 100%': { transform: 'translate(0,0) scale(1)' },
+              '33%': { transform: 'translate(30px,-40px) scale(1.08)' },
+              '66%': { transform: 'translate(-20px,20px) scale(0.95)' }
+            },
+            float: {
+              '0%,100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-12px) rotate(1deg)' }
+            },
+            marquee: {
+              '0%': { transform: 'translateX(0)' },
+              '100%': { transform: 'translateX(-50%)' }
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Production Structural Override CSS Styles -->
+  <style>
+    :root { color-scheme: dark light; }
+    html { scroll-behavior: smooth; }
+    .glass {
+      background: rgba(255, 255, 255, 0.45);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .dark .glass {
+      background: rgba(12, 15, 23, 0.7);
+      border-color: rgba(255, 255, 255, 0.06);
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      background: rgba(59, 130, 246, 0.05);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #3B82F6;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 2rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: #0c0f17;
+    }
+    .dark .section-title { color: #ffffff; }
+    @media(min-width: 640px) { .section-title { font-size: 2.5rem; } }
+    .section-subtitle {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #6b7385;
+    }
+    .dark .section-subtitle { color: #9aa3b5; }
+    
+    .hover-lift { transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(59,130,246,0.15); }
+    
+    .status-pill { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.8rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .status-pill-emerald { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    .status-pill-amber { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .status-pill-rose { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+    .chart-bar-col { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; height: 100%; justify-content: flex-end; }
+    .chart-bar { width: 100%; border-radius: 6px 6px 0 0; background: linear-gradient(180deg, #3b82f6, #60a5fa); transition: height 1s ease-in-out; }
+    .chart-bar-peak { background: linear-gradient(180deg, #ef4444, #f87171); }
+
+    .coach-avatar { width: 4.5rem; height: 4.5rem; border-radius: 1.5rem; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; margin: 0 auto 1.25rem; shadow: inset 0 2px 4px rgba(255,255,255,0.2); }
+    .coach-avatar-alt { background: linear-gradient(135deg, #161a24, #363c4c); border: 1px solid rgba(255,255,255,0.1); }
+
+    .transform-bar-col { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; }
+    .transform-bar { width: 100%; border-radius: 12px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700; transition: height 1s ease; }
+    .transform-bar-before { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
+    .transform-bar-after { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; }
+
+    .tool-tab { padding: 0.6rem 1.2rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; transition: all 0.25s ease; border: 1px solid transparent; background: rgba(0,0,0,0.04); color: #6b7385; }
+    .dark .tool-tab { background: rgba(255,255,255,0.04); color: #9aa3b5; }
+    .tool-tab.active { background: #3B82F6; color: white !important; box-shadow: 0 4px 14px rgba(59,130,246,0.4); }
+
+    .schedule-slot { padding: 0.75rem; border-radius: 12px; font-size: 0.8rem; border: 1px solid rgba(0,0,0,0.04); background: rgba(0,0,0,0.02); }
+    .dark .schedule-slot { border-color: rgba(255,255,255,0.04); background: rgba(255,255,255,0.01); }
+    .slot-crossfit { border-left: 4px solid #3b82f6; }
+    .slot-boxing { border-left: 4px solid #f59e0b; }
+    .slot-hiit { border-left: 4px solid #ef4444; }
+    .slot-zumba { border-left: 4px solid #ec4899; }
+    .slot-functional { border-left: 4px solid #10b981; }
+
+    html[dir="rtl"] .slot-crossfit { border-left: 0; border-right: 4px solid #3b82f6; }
+    html[dir="rtl"] .slot-boxing { border-left: 0; border-right: 4px solid #f59e0b; }
+    html[dir="rtl"] .slot-hiit { border-left: 0; border-right: 4px solid #ef4444; }
+    html[dir="rtl"] .slot-zumba { border-left: 0; border-right: 4px solid #ec4899; }
+    html[dir="rtl"] .slot-functional { border-left: 0; border-right: 4px solid #10b981; }
+
+    .gallery-item { position: relative; overflow: hidden; border-radius: 20px; aspect-ratio: 4/3; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .gallery-item:hover img { transform: scale(1.06); }
+    .gallery-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,15,23,0.85), transparent); opacity: 0; transition: opacity 0.3s ease; display: flex; align-items: flex-end; padding: 1.25rem; }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    .cell-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .cell-unit { aspect-ratio: 1; border-radius: 3px; background: rgba(0,0,0,0.06); transition: background 0.3s ease; }
+    .dark .cell-unit { background: rgba(255, 255, 255, 0.06); }
+    .cell-active { background: #3B82F6; box-shadow: 0 0 8px rgba(59,130,246,0.6); }
+
+    .result-tile { padding: 1rem; border-radius: 16px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05); text-align: center; }
+    .dark .result-tile { background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.05); }
+
+    /* تحسين طريقة عرض وإخفاء النصوص المباشرة بناءً على اتجاه اللغة */
+    html[dir="ltr"] .lang-ar { display: none !important; }
+    html[dir="rtl"] .lang-en { display: none !important; }
+  </style>
+
+  <script>
+    (function () {
+      var theme = localStorage.getItem('zf-theme') || 'dark';
+      var lang = localStorage.getItem('zf-lang') || 'en';
+      var root = document.documentElement;
+      if (theme === 'light') { root.classList.remove('dark'); } else { root.classList.add('dark'); }
+      root.setAttribute('lang', lang);
+      root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+      if (lang === 'ar') { root.classList.add('font-arabic'); }
+    })();
+  </script>
+</head>
+
+<body class="bg-white dark:bg-dark-950 text-dark-900 dark:text-dark-50 font-sans antialiased transition-colors duration-300 selection:bg-brand-500/30">
+
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="fixed inset-0 z-[100] flex items-center justify-center bg-white dark:bg-dark-950 transition-opacity duration-500">
+    <div class="flex flex-col items-center gap-4">
+      <div class="relative w-16 h-16">
+        <div class="absolute inset-0 rounded-full border-2 border-dark-100 dark:border-dark-800"></div>
+        <div class="absolute inset-0 rounded-full border-2 border-transparent border-t-brand-500 border-r-brand-500 animate-spin"></div>
+        <div class="absolute inset-0 flex items-center justify-center font-display font-bold text-brand-500 text-sm tracking-wider">KG</div>
+      </div>
+      <p class="font-display font-bold tracking-[0.2em] text-[10px] text-dark-400 uppercase" data-i18n="global.loading">Loading Ecosystem</p>
+    </div>
+  </div>
+
+  <!-- Scroll Progress -->
+  <div class="fixed top-0 left-0 right-0 h-1 z-[90] bg-dark-50/20 dark:bg-dark-900/20">
+    <div id="scroll-progress" class="h-full w-0 bg-gradient-to-r from-brand-500 to-accent-400 shadow-glow transition-all duration-75"></div>
+  </div>
+
+  <!-- Navigation -->
+  <header id="navbar" class="fixed top-2 left-0 right-0 z-[70] transition-all duration-300">
+    <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div id="nav-inner" class="flex items-center justify-between h-16 px-4 rounded-2xl glass transition-all duration-300">
+        
+        <a href="#home" class="flex items-center gap-2 group shrink-0">
+          <span class="relative flex items-center justify-center w-8 h-8 rounded-lg bg-dark-900 dark:bg-white/5 border border-brand-500/30 shadow-glow overflow-hidden">
+            <span class="relative font-display font-bold text-brand-500 text-sm">KG</span>
+          </span>
+          <span class="font-display font-bold text-base tracking-tight text-dark-900 dark:text-white uppercase">
+            Kilini <span class="text-brand-500">Gym</span>
+          </span>
+        </a>
+
+        <div class="hidden lg:flex items-center gap-1 font-medium text-xs tracking-wider uppercase">
+          <a href="#status" class="px-3 py-2 rounded-lg text-dark-500 dark:text-dark-300 hover:text-brand-500 transition-colors" data-i18n="nav.status">Live Status</a>
+          <a href="#plans" class="px-3 py-2 rounded-lg text-dark-500 dark:text-dark-300 hover:text-brand-500 transition-colors" data-i18n="nav.plans">Memberships</a>
+          <a href="#coaches" class="px-3 py-2 rounded-lg text-dark-500 dark:text-dark-300 hover:text-brand-500 transition-colors" data-i18n="nav.coaches">Coaches</a>
+          <a href="#tools" class="px-3 py-2 rounded-lg text-dark-500 dark:text-dark-300 hover:text-brand-500 transition-colors" data-i18n="nav.tools">Tools</a>
+          <a href="#schedule" class="px-3 py-2 rounded-lg text-dark-500 dark:text-dark-300 hover:text-brand-500 transition-colors" data-i18n="nav.schedule">Schedule</a>
+          <a href="#dashboard" class="px-3 py-2 rounded-lg text-dark-500 dark:text-dark-300 hover:text-brand-500 transition-colors" data-i18n="nav.dashboard">Dashboard</a>
+          <a href="#contact" class="px-3 py-2 rounded-lg text-dark-500 dark:text-dark-300 hover:text-brand-500 transition-colors" data-i18n="nav.contact">Contact</a>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="lang-toggle" aria-label="Language Shift" class="flex items-center justify-center gap-1.5 h-8 px-3 rounded-xl border border-dark-200 dark:border-white/10 text-xs font-bold text-dark-700 dark:text-dark-200 hover:border-brand-500/50 hover:text-brand-500 transition-all">
+            <i data-lucide="languages" class="w-3.5 h-3.5"></i>
+            <span id="lang-toggle-label">AR</span>
+          </button>
+
+          <button id="theme-toggle" aria-label="Theme Engine Reset" class="flex items-center justify-center w-8 h-8 rounded-xl border border-dark-200 dark:border-white/10 text-dark-700 dark:text-dark-200 hover:border-brand-500/50 hover:text-brand-500 transition-all">
+            <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+            <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+          </button>
+
+          <a href="#plans" class="hidden sm:inline-flex items-center h-8 px-4 rounded-xl bg-brand-500 text-white text-xs font-bold tracking-wider shadow-glow hover:bg-brand-600 transition-all uppercase" data-i18n="nav.join">Join Now</a>
+
+          <button id="mobile-menu-toggle" aria-label="Viewport Panel Call" class="lg:hidden flex items-center justify-center w-8 h-8 rounded-xl border border-dark-200 dark:border-white/10 text-dark-700 dark:text-dark-200">
+            <i data-lucide="menu" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobile-menu" class="lg:hidden hidden mt-2 rounded-2xl glass p-2 shadow-glass font-medium text-xs uppercase tracking-wider">
+        <a href="#status" class="block px-4 py-2.5 rounded-xl text-dark-700 dark:text-dark-200 hover:bg-brand-500/10" data-i18n="nav.status">Live Status</a>
+        <a href="#plans" class="block px-4 py-2.5 rounded-xl text-dark-700 dark:text-dark-200 hover:bg-brand-500/10" data-i18n="nav.plans">Memberships</a>
+        <a href="#coaches" class="block px-4 py-2.5 rounded-xl text-dark-700 dark:text-dark-200 hover:bg-brand-500/10" data-i18n="nav.coaches">Coaches</a>
+        <a href="#tools" class="block px-4 py-2.5 rounded-xl text-dark-700 dark:text-dark-200 hover:bg-brand-500/10" data-i18n="nav.tools">Tools</a>
+        <a href="#schedule" class="block px-4 py-2.5 rounded-xl text-dark-700 dark:text-dark-200 hover:bg-brand-500/10" data-i18n="nav.schedule">Schedule</a>
+        <a href="#dashboard" class="block px-4 py-2.5 rounded-xl text-dark-700 dark:text-dark-200 hover:bg-brand-500/10" data-i18n="nav.dashboard">Dashboard</a>
+        <a href="#contact" class="block px-4 py-2.5 rounded-xl text-dark-700 dark:text-dark-200 hover:bg-brand-500/10" data-i18n="nav.contact">Contact</a>
+        <a href="#plans" class="mt-2 flex items-center justify-center h-10 rounded-xl bg-brand-500 text-white font-bold" data-i18n="nav.join">Join Now</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="relative min-h-screen flex items-center pt-28 pb-16 overflow-hidden">
+    <div class="absolute inset-0 -z-10 bg-white dark:bg-dark-950">
+      <div class="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-grid [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_40%,transparent_100%)]"></div>
+      <div class="absolute -top-40 -left-40 w-[32rem] h-[32rem] bg-brand-500/15 rounded-full blur-[140px] animate-blob"></div>
+      <div class="absolute top-1/4 -right-40 w-[32rem] h-[32rem] bg-brand-500/10 rounded-full blur-[140px] animate-blob-slow"></div>
+    </div>
+
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center w-full">
+      <div class="reveal" data-reveal>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-brand-500/30 bg-brand-500/5 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
+          <span class="text-[10px] font-bold tracking-[0.2em] text-brand-600 dark:text-brand-400 uppercase" data-i18n="hero.badge">The Next Gen Fitness Standard</span>
+        </div>
+
+        <h1 class="font-display font-bold text-4xl sm:text-5xl lg:text-6xl leading-[1.1] tracking-tight text-dark-900 dark:text-white">
+          <span class="lang-en">Train Smarter.<br>Track Better.<br><span class="text-brand-500">Transform Faster.</span></span>
+          <span class="lang-ar">تدرّب بذكاء أكبر.<br>تتبّع بشكل أفضل.<br><span class="text-brand-500">تحوّل بأسرع وقت.</span></span>
+        </h1>
+
+        <p class="mt-6 text-sm sm:text-base text-dark-500 dark:text-dark-400 max-w-md leading-relaxed" data-i18n="hero.subtitle">
+          The Future of Fitness Starts Here. Experience a seamless fusion of luxury training, live tracking metrics, and custom high-performance management architecture.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href="#plans" class="inline-flex items-center h-12 px-6 rounded-xl bg-brand-500 text-white text-xs font-bold tracking-wider uppercase shadow-glow hover:bg-brand-600 transition-all" data-i18n="hero.btnJoin">Join Now</a>
+          <a href="#plans" class="inline-flex items-center h-12 px-6 rounded-xl border border-dark-200 dark:border-white/10 text-dark-800 dark:text-white text-xs font-bold tracking-wider uppercase hover:border-brand-500/50 hover:text-brand-500 transition-all" data-i18n="hero.btnExplore">Explore Memberships</a>
+        </div>
+      </div>
+
+      <div class="relative reveal" data-reveal data-reveal-delay="100">
+        <div class="hidden sm:flex absolute -top-4 -left-6 z-20 items-center gap-3 px-4 py-2.5 rounded-xl glass shadow-glass animate-float">
+          <span class="flex items-center justify-center w-6 h-6 rounded-lg bg-brand-500/10 text-brand-500"><i data-lucide="flame" class="w-3.5 h-3.5"></i></span>
+          <div>
+            <p class="text-[9px] text-dark-400 uppercase font-bold tracking-wider" data-i18n="hero.chip1">Energy Burned</p>
+            <p class="text-xs font-bold font-mono text-dark-900 dark:text-white" data-i18n="hero.chip1Val">542 kcal</p>
+          </div>
+        </div>
+
+        <div class="glass rounded-3xl p-6 shadow-glass relative">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <p class="text-[10px] uppercase font-bold tracking-wider text-dark-400" data-i18n="hero.dashGreeting">System Active</p>
+              <p class="font-display font-bold text-base text-dark-900 dark:text-white" data-i18n="hero.dashId">Member Core ID</p>
+            </div>
+<span class="w-8 h-8 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center font-bold text-xs font-display">KG</span>
+          </div>
+
+          <div class="flex items-center gap-6 p-4 rounded-2xl bg-dark-50/50 dark:bg-dark-900/50 border border-dark-100 dark:border-white/5">
+            <div class="relative w-16 h-16 shrink-0">
+              <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="8" class="text-dark-100 dark:text-white/5"></circle>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#3B82F6" stroke-width="8" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="65"></circle>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center font-display font-bold text-sm text-dark-900 dark:text-white">75%</div>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-dark-900 dark:text-white" data-i18n="hero.dashGoalTitle">Weekly Target Progress</p>
+              <p class="text-[11px] text-dark-400 mt-0.5" data-i18n="hero.dashGoalSub">15 of 20 targets unlocked</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 mt-4">
+            <div class="rounded-xl p-3 bg-dark-50/30 dark:bg-dark-900/30 border border-dark-100 dark:border-white/5 text-center">
+              <i data-lucide="activity" class="w-3.5 h-3.5 text-brand-500 mx-auto mb-1"></i>
+              <p class="font-mono font-bold text-xs text-dark-900 dark:text-white" data-i18n="hero.pulseVal">134 bpm</p>
+              <p class="text-[9px] text-dark-400 uppercase tracking-wider" data-i18n="hero.pulse">Pulse</p>
+            </div>
+            <div class="rounded-xl p-3 bg-dark-50/30 dark:bg-dark-900/30 border border-dark-100 dark:border-white/5 text-center">
+              <i data-lucide="droplets" class="w-3.5 h-3.5 text-brand-500 mx-auto mb-1"></i>
+              <p class="font-mono font-bold text-xs text-dark-900 dark:text-white" data-i18n="hero.hydrationVal">2.8 Liters</p>
+              <p class="text-[9px] text-dark-400 uppercase tracking-wider" data-i18n="hero.hydration">Hydration</p>
+            </div>
+            <div class="rounded-xl p-3 bg-dark-50/30 dark:bg-dark-900/30 border border-dark-100 dark:border-white/5 text-center">
+              <i data-lucide="clock" class="w-3.5 h-3.5 text-brand-500 mx-auto mb-1"></i>
+              <p class="font-mono font-bold text-xs text-dark-900 dark:text-white" data-i18n="hero.durationVal">45 min</p>
+              <p class="text-[9px] text-dark-400 uppercase tracking-wider" data-i18n="hero.duration">Duration</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Analytics Section -->
+  <section id="status" class="relative py-20 lg:py-28 scroll-mt-16 border-t border-dark-100 dark:border-white/5">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center max-w-xl mx-auto mb-12" data-reveal>
+        <span class="eyebrow"><i data-lucide="radio" class="w-3.5 h-3.5"></i><span data-i18n="status.eyebrow">Smart Gym Status</span></span>
+        <h2 class="section-title" data-i18n="status.title">Live Operational Metrics</h2>
+        <p class="section-subtitle" data-i18n="status.subtitle">Real-time status loops track live occupancy, space utilization, and traffic curves instantly.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="glass rounded-3xl p-6 flex flex-col justify-between reveal" data-reveal>
+          <div class="flex items-center justify-between mb-6">
+            <span class="text-[10px] font-bold tracking-widest text-brand-500 uppercase" data-i18n="status.live">Live Traffic Feed</span>
+            <span class="status-pill status-pill-amber">
+              <span class="w-1 h-1 rounded-full bg-amber-500"></span><span data-i18n="status.mod">Moderate Traffic</span>
+            </span>
+          </div>
+
+          <div class="relative w-36 h-36 mx-auto my-2">
+            <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
+              <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="6" class="text-dark-100 dark:text-white/5"></circle>
+              <circle cx="50" cy="50" r="44" fill="none" stroke="#3B82F6" stroke-width="6" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="66"></circle>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span class="font-display font-bold text-3xl text-dark-900 dark:text-white">76%</span>
+              <span class="text-[9px] uppercase font-bold tracking-wider text-dark-400 mt-0.5" data-i18n="status.capacity">Capacity</span>
+            </div>
+          </div>
+
+          <div class="space-y-2 mt-6 pt-4 border-t border-dark-100 dark:border-white/5 text-xs text-dark-500 dark:text-dark-400">
+            <div class="flex justify-between">
+              <span data-i18n="status.light">🟢 Light Traffic</span><span>06:00 - 11:00</span>
+            </div>
+            <div class="flex justify-between font-bold text-dark-900 dark:text-white">
+              <span data-i18n="status.moderate">🟡 Moderate Traffic</span><span>11:00 - 16:00</span>
+            </div>
+            <div class="flex justify-between">
+              <span data-i18n="status.peak">🔴 Peak Hours</span><span>17:00 - 22:00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2 grid sm:grid-cols-2 gap-6">
+          <div class="glass rounded-3xl p-6 hover-lift">
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-8 h-8 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center"><i data-lucide="users" class="w-4 h-4"></i></span>
+              <span class="text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">+14%</span>
+            </div>
+            <h3 class="font-display font-bold text-3xl text-dark-900 dark:text-white font-mono">182</h3>
+            <p class="text-xs text-dark-400 mt-1" data-i18n="status.inside">Current Members Inside</p>
+          </div>
+
+          <div class="glass rounded-3xl p-6 hover-lift">
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-8 h-8 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center"><i data-lucide="activity" class="w-4 h-4"></i></span>
+              <span class="text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full" data-i18n="status.optimal">Optimal</span>
+            </div>
+            <h3 class="font-display font-bold text-3xl text-dark-900 dark:text-white font-mono">76%</h3>
+            <p class="text-xs text-dark-400 mt-1" data-i18n="status.utilization">Gym Floor Capacity</p>
+          </div>
+
+          <div class="glass rounded-3xl p-6 hover-lift">
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-8 h-8 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center"><i data-lucide="id-card" class="w-4 h-4"></i></span>
+              <span class="text-[10px] font-mono font-bold text-brand-500 bg-brand-500/10 px-2 py-0.5 rounded-full">+4.2%</span>
+            </div>
+            <h3 class="font-display font-bold text-3xl text-dark-900 dark:text-white font-mono">1,860</h3>
+            <p class="text-xs text-dark-400 mt-1" data-i18n="status.active">Active Memberships Registered</p>
+          </div>
+
+          <div class="glass rounded-3xl p-6 hover-lift">
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-8 h-8 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center"><i data-lucide="user-plus" class="w-4 h-4"></i></span>
+              <span class="text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full" data-i18n="status.record">Record</span>
+            </div>
+            <h3 class="font-display font-bold text-3xl text-dark-900 dark:text-white font-mono">+47</h3>
+            <p class="text-xs text-dark-400 mt-1" data-i18n="status.new">New Registrations This Week</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 glass rounded-3xl p-6 reveal" data-reveal>
+        <p class="font-display font-bold text-sm text-dark-900 dark:text-white mb-6" data-i18n="status.chart">Hourly Space Allocation Index</p>
+        <div class="grid grid-cols-7 gap-3 h-32 items-end">
+          <div class="chart-bar-col"><div class="chart-bar" style="height: 45%;"></div><span class="text-[10px] text-dark-400" data-i18n="days.mon">Mon</span></div>
+          <div class="chart-bar-col"><div class="chart-bar" style="height: 60%;"></div><span class="text-[10px] text-dark-400" data-i18n="days.tue">Tue</span></div>
+          <div class="chart-bar-col"><div class="chart-bar" style="height: 75%;"></div><span class="text-[10px] text-dark-400" data-i18n="days.wed">Wed</span></div>
+          <div class="chart-bar-col"><div class="chart-bar" style="height: 65%;"></div><span class="text-[10px] text-dark-400" data-i18n="days.thu">Thu</span></div>
+          <div class="chart-bar-col"><div class="chart-bar" style="height: 85%;"></div><span class="text-[10px] text-dark-400" data-i18n="days.fri">Fri</span></div>
+          <div class="chart-bar-col"><div class="chart-bar chart-bar-peak" style="height: 95%;"></div><span class="text-[10px] text-dark-400" data-i18n="days.sat">Sat</span></div>
+          <div class="chart-bar-col"><div class="chart-bar" style="height: 50%;"></div><span class="text-[10px] text-dark-400" data-i18n="days.sun">Sun</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Memberships Section -->
+  <section id="plans" class="relative py-20 lg:py-28 scroll-mt-16 bg-dark-50/50 dark:bg-dark-900/20 border-t border-dark-100 dark:border-white/5">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center max-w-xl mx-auto mb-14" data-reveal>
+        <span class="eyebrow"><i data-lucide="layers" class="w-3.5 h-3.5"></i><span data-i18n="plans.eyebrow">Tier Framework</span></span>
+        <h2 class="section-title" data-i18n="plans.title">Premium Membership Tiers</h2>
+        <p class="section-subtitle" data-i18n="plans.subtitle">Select an architecture tier optimized for your lifecycle metrics. No hidden fees.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 items-stretch">
+        <!-- Basic -->
+        <div class="glass rounded-3xl p-6 flex flex-col justify-between hover-lift relative reveal" data-reveal>
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-display font-bold text-lg text-dark-900 dark:text-white" data-i18n="plans.b.title">Basic Tier</h3>
+              <i data-lucide="dumbbell" class="w-4 h-4 text-dark-400"></i>
+            </div>
+            <div class="flex items-end gap-1 my-4">
+              <span class="font-display font-bold text-4xl text-dark-900 dark:text-white font-mono" data-i18n="plans.price.29">$29</span>
+              <span class="text-xs text-dark-400 mb-1" data-i18n="plans.perMonth">/ month</span>
+            </div>
+            <ul class="space-y-2.5 text-xs text-dark-600 dark:text-dark-300 mt-6">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i><span data-i18n="plans.b.f1">Standard Gym Floor Access</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i><span data-i18n="plans.b.f2">Digital App Access Matrix</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i><span data-i18n="plans.b.f3">Locker Room Operational Access</span></li>
+              <li class="flex items-center gap-2 text-dark-300 dark:text-dark-600 line-through"><i data-lucide="x" class="w-3.5 h-3.5"></i><span data-i18n="plans.b.f4">Personal Training Modules</span></li>
+            </ul>
+          </div>
+          <a href="#contact" class="w-full mt-8 h-10 rounded-xl border border-dark-200 dark:border-white/10 flex items-center justify-center text-xs font-bold uppercase tracking-wider hover:border-brand-500 transition-colors" data-i18n="plans.cta">Select Engine Tier</a>
+        </div>
+
+        <!-- Elite -->
+        <div class="glass rounded-3xl p-6 flex flex-col justify-between hover-lift relative border-2 border-brand-500/80 reveal" data-reveal data-reveal-delay="50">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-brand-500 text-white text-[9px] font-bold tracking-widest uppercase shadow-glow" data-i18n="plans.recommended">Highly Recommended</span>
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-display font-bold text-lg text-dark-900 dark:text-white" data-i18n="plans.e.title">Elite Tier</h3>
+              <i data-lucide="crown" class="w-4 h-4 text-brand-500"></i>
+            </div>
+            <div class="flex items-end gap-1 my-4">
+              <span class="font-display font-bold text-4xl text-dark-900 dark:text-white font-mono" data-i18n="plans.price.89">$89</span>
+              <span class="text-xs text-dark-400 mb-1" data-i18n="plans.perMonth">/ month</span>
+            </div>
+            <ul class="space-y-2.5 text-xs text-dark-600 dark:text-dark-300 mt-6">
+              <li class="flex items-center gap-2 font-bold text-dark-900 dark:text-white"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i><span data-i18n="plans.e.f1">24/7 Multi-Facility Access</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i><span data-i18n="plans.e.f2">4 Private Coach Sessions / Mo</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i><span data-i18n="plans.e.f3">Custom Dynamic Nutrition Modules</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i><span data-i18n="plans.e.f4">Priority Live Class Booking Vector</span></li>
+            </ul>
+          </div>
+          <a href="#contact" class="w-full mt-8 h-10 rounded-xl bg-brand-500 text-white flex items-center justify-center text-xs font-bold uppercase tracking-wider hover:bg-brand-600 transition-colors shadow-glow" data-i18n="plans.cta">Select Engine Tier</a>
+        </div>
+
+        <!-- Premium -->
+        <div class="glass rounded-3xl p-6 flex flex-col justify-between hover-lift relative reveal" data-reveal data-reveal-delay="100">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-display font-bold text-lg text-dark-900 dark:text-white" data-i18n="plans.p.title">Premium Tier</h3>
+              <i data-lucide="zap" class="w-4 h-4 text-brand-400"></i>
+            </div>
+            <div class="flex items-end gap-1 my-4">
+              <span class="font-display font-bold text-4xl text-dark-900 dark:text-white font-mono" data-i18n="plans.price.54">$54</span>
+              <span class="text-xs text-dark-400 mb-1" data-i18n="plans.perMonth">/ month</span>
+            </div>
+            <ul class="space-y-2.5 text-xs text-dark-600 dark:text-dark-300 mt-6">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i><span data-i18n="plans.p.f1">Complete Floor Access Core</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i><span data-i18n="plans.p.f2">Unlimited Integrated Group Classes</span></li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-500"></i><span data-i18n="plans.p.f3">1 Managed Coach Session / Mo</span></li>
+              <li class="flex items-center gap-2 text-dark-300 dark:text-dark-600 line-through"><i data-lucide="x" class="w-3.5 h-3.5"></i><span data-i18n="plans.p.f4">Biometric Tracking Audits</span></li>
+            </ul>
+          </div>
+          <a href="#contact" class="w-full mt-8 h-10 rounded-xl border border-dark-200 dark:border-white/10 flex items-center justify-center text-xs font-bold uppercase tracking-wider hover:border-brand-500 transition-colors" data-i18n="plans.cta">Select Engine Tier</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coaches Section -->
+  <section id="coaches" class="relative py-20 lg:py-28 scroll-mt-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center max-w-xl mx-auto mb-14" data-reveal>
+        <span class="eyebrow"><i data-lucide="award" class="w-3.5 h-3.5"></i><span data-i18n="coaches.eyebrow">Performance Masters</span></span>
+        <h2 class="section-title" data-i18n="coaches.title">Certified Biometric Engineers</h2>
+        <p class="section-subtitle" data-i18n="coaches.subtitle">Data-driven human performance instructors handling optimization mechanics. No arbitrary stock faces.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Coach 1 -->
+        <div class="glass rounded-3xl p-6 text-center hover-lift reveal" data-reveal>
+          <div class="coach-avatar"><span>AH</span></div>
+          <h3 class="font-display font-bold text-base text-dark-900 dark:text-white" data-i18n="coaches.c1.name">Ahmed Hassan</h3>
+          <p class="text-xs text-brand-500 font-semibold mt-1" data-i18n="coaches.c1.spec">Strength Architecture</p>
+          <p class="text-[11px] text-dark-400 mt-3 font-mono" data-i18n="coaches.c1.exp">9+ Years Exp</p>
+        </div>
+        <!-- Coach 2 -->
+        <div class="glass rounded-3xl p-6 text-center hover-lift reveal" data-reveal data-reveal-delay="50">
+          <div class="coach-avatar coach-avatar-alt"><span>MK</span></div>
+          <h3 class="font-display font-bold text-base text-dark-900 dark:text-white" data-i18n="coaches.c2.name">Mona Khaled</h3>
+          <p class="text-xs text-brand-500 font-semibold mt-1" data-i18n="coaches.c2.spec">Mobility Systems</p>
+          <p class="text-[11px] text-dark-400 mt-3 font-mono" data-i18n="coaches.c2.exp">7+ Years Exp</p>
+        </div>
+        <!-- Coach 3 -->
+        <div class="glass rounded-3xl p-6 text-center hover-lift reveal" data-reveal data-reveal-delay="100">
+          <div class="coach-avatar"><span>SA</span></div>
+          <h3 class="font-display font-bold text-base text-dark-900 dark:text-white" data-i18n="coaches.c3.name">Sara Ali</h3>
+          <p class="text-xs text-brand-500 font-semibold mt-1" data-i18n="coaches.c3.spec">High-Intensity Matrix</p>
+          <p class="text-[11px] text-dark-400 mt-3 font-mono" data-i18n="coaches.c3.exp">6+ Years Exp</p>
+        </div>
+        <!-- Coach 4 -->
+        <div class="glass rounded-3xl p-6 text-center hover-lift reveal" data-reveal data-reveal-delay="150">
+          <div class="coach-avatar coach-avatar-alt"><span>RM</span></div>
+          <h3 class="font-display font-bold text-base text-dark-900 dark:text-white" data-i18n="coaches.c4.name">Ramy Mostafa</h3>
+          <p class="text-xs text-brand-500 font-semibold mt-1" data-i18n="coaches.c4.spec">Combat Optimization</p>
+          <p class="text-[11px] text-dark-400 mt-3 font-mono" data-i18n="coaches.c4.exp">11+ Years Exp</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transformation Section -->
+  <section id="transformations" class="relative py-20 lg:py-28 scroll-mt-16 bg-dark-50/50 dark:bg-dark-900/20 border-t border-dark-100 dark:border-white/5">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center max-w-xl mx-auto mb-14" data-reveal>
+        <span class="eyebrow"><i data-lucide="trending-up" class="w-3.5 h-3.5"></i><span data-i18n="trans.eyebrow">Data Verification</span></span>
+        <h2 class="section-title" data-i18n="trans.title">Transformation Architecture Logs</h2>
+        <p class="section-subtitle" data-i18n="trans.subtitle">Verified internal biometric reports mapped chronologically from deployment status down to execution metrics.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- User 1 -->
+        <div class="glass rounded-3xl p-6 hover-lift reveal" data-reveal>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center font-bold font-display text-sm">RM</span>
+            <div>
+              <p class="font-display font-bold text-sm text-dark-900 dark:text-white">Ramy M.</p>
+              <p class="text-[10px] text-dark-400 uppercase font-bold tracking-wider" data-i18n="trans.elite">Elite Token Member</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4 my-6">
+            <div class="transform-bar-col">
+              <div class="transform-bar transform-bar-before h-28" data-i18n="weight.96">96kg</div>
+              <span class="text-[10px] text-dark-400 font-bold" data-i18n="trans.before">Before</span>
+            </div>
+            <div class="transform-bar-col">
+              <div class="transform-bar transform-bar-after h-20" data-i18n="weight.78">78kg</div>
+              <span class="text-[10px] text-dark-400 font-bold" data-i18n="trans.after">After</span>
+            </div>
+          </div>
+          <div class="flex justify-between border-t border-dark-100 dark:border-white/5 pt-4 text-center font-mono">
+            <div><p class="text-sm font-bold text-dark-900 dark:text-white" data-i18n="weight.minus18">-18kg</p><p class="text-[9px] text-dark-400 uppercase" data-i18n="trans.lost">Mass lost</p></div>
+            <div><p class="text-sm font-bold text-dark-900 dark:text-white" data-i18n="weight.plus4">+4kg</p><p class="text-[9px] text-dark-400 uppercase" data-i18n="trans.gain">Hypertrophy</p></div>
+            <div><p class="text-sm font-bold text-dark-900 dark:text-white" data-i18n="trans.runtime.6">6 Mo</p><p class="text-[9px] text-dark-400 uppercase" data-i18n="trans.dur">Runtime</p></div>
+          </div>
+        </div>
+
+        <!-- User 2 -->
+        <div class="glass rounded-3xl p-6 hover-lift reveal" data-reveal data-reveal-delay="50">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center font-bold font-display text-sm">SA</span>
+            <div>
+              <p class="font-display font-bold text-sm text-dark-900 dark:text-white">Sara A.</p>
+              <p class="text-[10px] text-dark-400 uppercase font-bold tracking-wider" data-i18n="trans.premium">Premium Token Member</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4 my-6">
+            <div class="transform-bar-col">
+              <div class="transform-bar transform-bar-before h-24" data-i18n="weight.68">68kg</div>
+              <span class="text-[10px] text-dark-400 font-bold" data-i18n="trans.before">Before</span>
+            </div>
+            <div class="transform-bar-col">
+              <div class="transform-bar transform-bar-after h-20" data-i18n="weight.61">61kg</div>
+              <span class="text-[10px] text-dark-400 font-bold" data-i18n="trans.after">After</span>
+            </div>
+          </div>
+          <div class="flex justify-between border-t border-dark-100 dark:border-white/5 pt-4 text-center font-mono">
+            <div><p class="text-sm font-bold text-dark-900 dark:text-white" data-i18n="weight.minus7">-7kg</p><p class="text-[9px] text-dark-400 uppercase" data-i18n="trans.lost">Mass lost</p></div>
+            <div><p class="text-sm font-bold text-dark-900 dark:text-white" data-i18n="weight.plus2">+2kg</p><p class="text-[9px] text-dark-400 uppercase" data-i18n="trans.gain">Hypertrophy</p></div>
+            <div><p class="text-sm font-bold text-dark-900 dark:text-white" data-i18n="trans.runtime.4">4 Mo</p><p class="text-[9px] text-dark-400 uppercase" data-i18n="trans.dur">Runtime</p></div>
+          </div>
+        </div>
+
+        <!-- User 3 -->
+        <div class="glass rounded-3xl p-6 hover-lift reveal" data-reveal data-reveal-delay="100">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center font-bold font-display text-sm">AH</span>
+            <div>
+              <p class="font-display font-bold text-sm text-dark-900 dark:text-white">Ahmed H.</p>
+              <p class="text-[10px] text-dark-400 uppercase font-bold tracking-wider" data-i18n="trans.elite">Elite Token Member</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4 my-6">
+            <div class="transform-bar-col">
+              <div class="transform-bar transform-bar-before h-20" data-i18n="weight.74">74kg</div>
+              <span class="text-[10px] text-dark-400 font-bold" data-i18n="trans.before">Before</span>
+            </div>
+            <div class="transform-bar-col">
+              <div class="transform-bar transform-bar-after h-28" data-i18n="weight.85">85kg</div>
+              <span class="text-[10px] text-dark-400 font-bold" data-i18n="trans.after">After</span>
+            </div>
+          </div>
+          <div class="flex justify-between border-t border-dark-100 dark:border-white/5 pt-4 text-center font-mono">
+            <div><p class="text-sm font-bold text-dark-900 dark:text-white" data-i18n="weight.plus11">+11kg</p><p class="text-[9px] text-dark-400 uppercase" data-i18n="trans.muscleGain">Muscle gain</p></div>
+            <div><p class="text-sm font-bold text-dark-900 dark:text-white" data-i18n="weight.minus4">-4%</p><p class="text-[9px] text-dark-400 uppercase" data-i18n="trans.bf">Adipose index</p></div>
+            <div><p class="text-sm font-bold text-dark-900 dark:text-white" data-i18n="trans.runtime.8">8 Mo</p><p class="text-[9px] text-dark-400 uppercase" data-i18n="trans.dur">Runtime</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Calculators Section -->
+  <section id="tools" class="relative py-20 lg:py-28 scroll-mt-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center max-w-xl mx-auto mb-10" data-reveal>
+        <span class="eyebrow"><i data-lucide="calculator" class="w-3.5 h-3.5"></i><span data-i18n="tools.eyebrow">Digital Engine Lab</span></span>
+        <h2 class="section-title" data-i18n="tools.title">Integrated Biometric Processors</h2>
+        <p class="section-subtitle" data-i18n="tools.subtitle">Instant execution calculators engineered to compile systemic metrics directly from raw data inputs.</p>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-2 mb-8 reveal" data-reveal>
+        <button type="button" class="tool-tab active" data-tab="bmi" data-i18n="tools.tabBmi">BMI Module</button>
+        <button type="button" class="tool-tab" data-tab="cal" data-i18n="tools.tabCal">TDEE Caloric Matrix</button>
+        <button type="button" class="tool-tab" data-tab="water" data-i18n="tools.tabWater">Hydration Volumizer</button>
+      </div>
+
+      <div class="max-w-xl mx-auto glass rounded-3xl p-6 sm:p-8 reveal" data-reveal data-reveal-delay="50">
+        <!-- BMI Content Component -->
+        <div id="panel-bmi" class="tool-panel space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-dark-400 mb-1" for="bmi-w" data-i18n="tools.w">Mass (kg)</label>
+              <input id="bmi-w" type="number" placeholder="75" class="w-full bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:border-brand-500 focus:outline-none transition-colors" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-dark-400 mb-1" for="bmi-h" data-i18n="tools.h">Stature (cm)</label>
+              <input id="bmi-h" type="number" placeholder="180" class="w-full bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:border-brand-500 focus:outline-none transition-colors" />
+            </div>
+          </div>
+          <button type="button" id="btn-bmi" class="w-full h-11 rounded-xl bg-brand-500 text-white text-xs font-bold uppercase tracking-wider hover:bg-brand-600 transition-colors shadow-glow" data-i18n="tools.calc">Compile BMI</button>
+          <div id="res-bmi" class="hidden mt-4 pt-4 border-t border-dark-100 dark:border-white/5 text-center font-mono">
+            <p class="text-xs text-dark-400" data-i18n="tools.out">Index Output Score</p>
+            <p id="val-bmi" class="text-3xl font-bold text-brand-500 mt-1">0.0</p>
+          </div>
+        </div>
+
+        <!-- Calories Component -->
+        <div id="panel-cal" class="tool-panel space-y-4 hidden">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-dark-400 mb-1" for="cal-w" data-i18n="tools.w">Mass (kg)</label>
+              <input id="cal-w" type="number" placeholder="75" class="w-full bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:border-brand-500 focus:outline-none transition-colors" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-dark-400 mb-1" for="cal-h" data-i18n="tools.h">Stature (cm)</label>
+              <input id="cal-h" type="number" placeholder="180" class="w-full bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:border-brand-500 focus:outline-none transition-colors" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-dark-400 mb-1" for="cal-a" data-i18n="tools.age">Age (Yrs)</label>
+              <input id="cal-a" type="number" placeholder="25" class="w-full bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:border-brand-500 focus:outline-none transition-colors" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-dark-400 mb-1" for="cal-g" data-i18n="tools.gen">Gender Vector</label>
+              <select id="cal-g" class="w-full bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:border-brand-500 focus:outline-none transition-colors">
+                <option value="m" data-i18n="tools.m">Male Core</option>
+                <option value="f" data-i18n="tools.f">Female Core</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" id="btn-cal" class="w-full h-11 rounded-xl bg-brand-500 text-white text-xs font-bold uppercase tracking-wider hover:bg-brand-600 transition-colors shadow-glow" data-i18n="tools.calc">Compile Metabolic TDEE</button>
+          <div id="res-cal" class="hidden mt-4 pt-4 border-t border-dark-100 dark:border-white/5 grid grid-cols-3 gap-2 font-mono text-center">
+            <div class="result-tile"><p class="text-[9px] text-dark-400 uppercase" data-i18n="tools.lose">Cut</p><p id="val-cut" class="text-xs font-bold text-brand-500 mt-1">0</p></div>
+            <div class="result-tile bg-brand-500/5"><p class="text-[9px] text-dark-500 dark:text-dark-300 uppercase font-bold" data-i18n="tools.maint">Maintain</p><p id="val-maint" class="text-sm font-bold text-brand-500 mt-1">0</p></div>
+            <div class="result-tile"><p class="text-[9px] text-dark-400 uppercase" data-i18n="tools.bulk">Bulk</p><p id="val-bulk" class="text-xs font-bold text-brand-500 mt-1">0</p></div>
+          </div>
+        </div>
+
+        <!-- Water Component -->
+        <div id="panel-water" class="tool-panel space-y-4 hidden">
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-dark-400 mb-1" for="wat-w" data-i18n="tools.w">Mass (kg)</label>
+            <input id="wat-w" type="number" placeholder="75" class="w-full bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:border-brand-500 focus:outline-none transition-colors" />
+          </div>
+          <button type="button" id="btn-water" class="w-full h-11 rounded-xl bg-brand-500 text-white text-xs font-bold uppercase tracking-wider hover:bg-brand-600 transition-colors shadow-glow" data-i18n="tools.calc">Compile Volumizer Volume</button>
+          <div id="res-water" class="hidden mt-4 pt-4 border-t border-dark-100 dark:border-white/5 text-center font-mono">
+            <p class="text-xs text-dark-400" data-i18n="tools.h2o">Required Allocation Vector</p>
+            <p id="val-water" class="text-3xl font-bold text-brand-500 mt-1">0.0 Liters</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Class Schedule Section -->
+  <section id="schedule" class="relative py-20 lg:py-28 scroll-mt-16 bg-dark-50/50 dark:bg-dark-900/20 border-t border-dark-100 dark:border-white/5">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center max-w-xl mx-auto mb-14" data-reveal>
+        <span class="eyebrow"><i data-lucide="calendar" class="w-3.5 h-3.5"></i><span data-i18n="schedule.eyebrow">Time Grid Matrix</span></span>
+        <h2 class="section-title" data-i18n="schedule.title">Operational Framework Timetable</h2>
+        <p class="section-subtitle" data-i18n="schedule.subtitle">Live scheduling channels for high-capacity system modules[cite: 4]. Reserve seats instantly.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 reveal" data-reveal>
+        <!-- Day Column Mon -->
+        <div class="glass rounded-2xl p-4 space-y-3">
+          <p class="font-display font-bold text-xs uppercase text-brand-500 tracking-wider" data-i18n="days.mon">Monday</p>
+          <div class="schedule-slot slot-crossfit">
+            <p class="font-bold text-dark-900 dark:text-white" data-i18n="classes.crossfit">CrossFit Core</p>
+            <p class="text-[10px] font-mono text-dark-400 mt-1">06:00 - 07:30</p>
+          </div>
+          <div class="schedule-slot slot-hiit">
+            <p class="font-bold text-dark-900 dark:text-white" data-i18n="classes.hiit">HIIT System</p>
+            <p class="text-[10px] font-mono text-dark-400 mt-1">18:00 - 19:00</p>
+          </div>
+        </div>
+
+        <!-- Day Column Tue -->
+        <div class="glass rounded-2xl p-4 space-y-3">
+          <p class="font-display font-bold text-xs uppercase text-brand-500 tracking-wider" data-i18n="days.tue">Tuesday</p>
+          <div class="schedule-slot slot-zumba">
+            <p class="font-bold text-dark-900 dark:text-white" data-i18n="classes.zumba">Zumba Module</p>
+            <p class="text-[10px] font-mono text-dark-400 mt-1">09:00 - 10:30</p>
+          </div>
+          <div class="schedule-slot slot-boxing">
+            <p class="font-bold text-dark-900 dark:text-white" data-i18n="classes.boxing">Boxing Vector</p>
+            <p class="text-[10px] font-mono text-dark-400 mt-1">19:00 - 20:30</p>
+          </div>
+        </div>
+
+        <!-- Day Column Wed -->
+        <div class="glass rounded-2xl p-4 space-y-3">
+          <p class="font-display font-bold text-xs uppercase text-brand-500 tracking-wider" data-i18n="days.wed">Wednesday</p>
+          <div class="schedule-slot slot-functional">
+            <p class="font-bold text-dark-900 dark:text-white" data-i18n="classes.functional">Functional Training</p>
+            <p class="text-[10px] font-mono text-dark-400 mt-1">07:00 - 08:30</p>
+          </div>
+          <div class="schedule-slot slot-crossfit">
+            <p class="font-bold text-dark-900 dark:text-white" data-i18n="classes.crossfit">CrossFit Core</p>
+            <p class="text-[10px] font-mono text-dark-400 mt-1">18:00 - 19:30</p>
+          </div>
+        </div>
+
+        <!-- Day Column Thu -->
+        <div class="glass rounded-2xl p-4 space-y-3">
+          <p class="font-display font-bold text-xs uppercase text-brand-500 tracking-wider" data-i18n="days.thu">Thursday</p>
+          <div class="schedule-slot slot-hiit">
+            <p class="font-bold text-dark-900 dark:text-white" data-i18n="classes.hiit">HIIT System</p>
+            <p class="text-[10px] font-mono text-dark-400 mt-1">06:00 - 07:00</p>
+          </div>
+          <div class="schedule-slot slot-zumba">
+            <p class="font-bold text-dark-900 dark:text-white" data-i18n="classes.zumba">Zumba Module</p>
+            <p class="text-[10px] font-mono text-dark-400 mt-1">17:00 - 18:30</p>
+          </div>
+        </div>
+
+        <!-- Day Column Fri -->
+        <div class="glass rounded-2xl p-4 space-y-3">
+          <p class="font-display font-bold text-xs uppercase text-brand-500 tracking-wider" data-i18n="days.fri">Friday</p>
+          <div class="schedule-slot slot-boxing">
+            <p class="font-bold text-dark-900 dark:text-white" data-i18n="classes.boxing">Boxing Vector</p>
+            <p class="text-[10px] font-mono text-dark-400 mt-1">09:00 - 10:30</p>
+          </div>
+          <div class="schedule-slot slot-functional">
+            <p class="font-bold text-dark-900 dark:text-white" data-i18n="classes.functional">Functional Training</p>
+            <p class="text-[10px] font-mono text-dark-400 mt-1">18:00 - 19:30</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery" class="relative py-20 lg:py-28 scroll-mt-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center max-w-xl mx-auto mb-14" data-reveal>
+        <span class="eyebrow"><i data-lucide="image" class="w-3.5 h-3.5"></i><span data-i18n="gallery.eyebrow">Facility Vectors</span></span>
+        <h2 class="section-title" data-i18n="gallery.title">Production-Floor Environment Architectural Blueprint</h2>
+        <p class="section-subtitle" data-i18n="gallery.subtitle">Raw spatial records detailing true, verified training installations[cite: 4]. No abstract graphics.</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 reveal" data-reveal>
+        <div class="gallery-item md:col-span-2 md:row-span-2">
+          <img src="https://static.wixstatic.com/media/11062b_97914589dea0409785184b9c11738278~mv2_d_5000_3333_s_4_2.jpg/v1/fill/w_301,h_320,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Dumbbells.jpg" alt="Kilini Gym High Performance Production Floor Center" loading="lazy" />
+          <div class="gallery-overlay"><p class="font-display font-bold text-sm text-white" data-i18n="gallery.item1">Main Training Floor</p></div>
+        </div>
+        <div class="gallery-item">
+          <img src="data:image/jpeg;base64,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" alt="Functional Training Kit" loading="lazy" />
+          <div class="gallery-overlay"><p class="font-display font-bold text-xs text-white" data-i18n="gallery.item1">Functional Training Kit</p></div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=600&q=80" alt="Plate Loaded Infrastructure Assembly" loading="lazy" />
+          <div class="gallery-overlay"><p class="font-display font-bold text-xs text-white" data-i18n="gallery.item3">Plate-Loaded Equipment</p></div>
+        </div>
+        <div class="gallery-item md:row-span-2">
+          <img src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=600&q=80" alt="Dumbbell Calibrated Array Racks" loading="lazy" />
+          <div class="gallery-overlay"><p class="font-display font-bold text-xs text-white" data-i18n="gallery.item4">Dumbbell Wall</p></div>
+        </div>
+        <div class="gallery-item">
+          <img src="data:image/jpeg;base64,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" alt="Cardio Kinetic Deck Rigs" loading="lazy" />
+          <div class="gallery-overlay"><p class="font-display font-bold text-xs text-white" data-i18n="gallery.item5">Cardio Zone</p></div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=600&q=80" alt="Functional Cross Kinetic Systems" loading="lazy" />
+          <div class="gallery-overlay"><p class="font-display font-bold text-xs text-white" data-i18n="gallery.item6">Functional Training Kit</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform Advantages Section -->
+  <section id="why" class="relative py-20 lg:py-28 scroll-mt-16 bg-dark-50/50 dark:bg-dark-900/20 border-t border-dark-100 dark:border-white/5">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center max-w-xl mx-auto mb-14" data-reveal>
+        <span class="eyebrow"><i data-lucide="shield" class="w-3.5 h-3.5"></i><span data-i18n="why.eyebrow">Platform Mechanics</span></span>
+        <h2 class="section-title" data-i18n="why.title">Engineered Structural Foundations</h2>
+        <p class="section-subtitle" data-i18n="why.subtitle">Why Kilini Gym rules fitness computation metrics[cite: 4]. Integrated system deployment modules built for scaling.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 reveal" data-reveal>
+        <div class="glass rounded-3xl p-6 hover-lift">
+          <i data-lucide="shield-check" class="w-6 h-6 text-brand-500 mb-4"></i>
+          <h3 class="font-display font-bold text-base text-dark-900 dark:text-white" data-i18n="why.f1.t">Certified Biometric Coaches</h3>
+          <p class="text-xs text-dark-500 dark:text-dark-400 mt-2 leading-relaxed" data-i18n="why.f1.d">Elite performance monitors analyzing real internal tracking files directly[cite: 4].</p>
+        </div>
+        <div class="glass rounded-3xl p-6 hover-lift">
+          <i data-lucide="cpu" class="w-6 h-6 text-brand-500 mb-4"></i>
+          <h3 class="font-display font-bold text-base text-dark-900 dark:text-white" data-i18n="why.f2.t">Premium Kinetic Infrastructure</h3>
+          <p class="text-xs text-dark-500 dark:text-dark-400 mt-2 leading-relaxed" data-i18n="why.f2.d">Calibrated machinery setups streaming real resistance loads into digital processing channels.</p>
+        </div>
+        <div class="glass rounded-3xl p-6 hover-lift">
+          <i data-lucide="apple" class="w-6 h-6 text-brand-500 mb-4"></i>
+          <h3 class="font-display font-bold text-base text-dark-900 dark:text-white" data-i18n="why.f3.t">Dynamic Nutrient Allocation</h3>
+          <p class="text-xs text-dark-500 dark:text-dark-400 mt-2 leading-relaxed" data-i18n="why.f3.d">Automated algorithmic breakdown frameworks targeting specified metabolic profiles.</p>
+        </div>
+        <div class="glass rounded-3xl p-6 hover-lift">
+          <i data-lucide="users" class="w-6 h-6 text-brand-500 mb-4"></i>
+          <h3 class="font-display font-bold text-base text-dark-900 dark:text-white" data-i18n="why.f4.t">SaaS Peer Ecosystem</h3>
+          <p class="text-xs text-dark-500 dark:text-dark-400 mt-2 leading-relaxed" data-i18n="why.f4.d">High-performance networks logging community target milestones synchronously.</p>
+        </div>
+        <div class="glass rounded-3xl p-6 hover-lift">
+          <i data-lucide="line-chart" class="w-6 h-6 text-brand-500 mb-4"></i>
+          <h3 class="font-display font-bold text-base text-dark-900 dark:text-white" data-i18n="why.f5.t">Granular Metric Tracking</h3>
+          <p class="text-xs text-dark-500 dark:text-dark-400 mt-2 leading-relaxed" data-i18n="why.f5.d">End-to-end data archival processes compiling progress charts directly to storage arrays.</p>
+        </div>
+        <div class="glass rounded-3xl p-6 hover-lift">
+          <i data-lucide="qr-code" class="w-6 h-6 text-brand-500 mb-4"></i>
+          <h3 class="font-display font-bold text-base text-dark-900 dark:text-white" data-i18n="why.f6.t">Instant Access Gateways</h3>
+          <p class="text-xs text-dark-500 dark:text-dark-400 mt-2 leading-relaxed" data-i18n="why.f6.d">Automated token validation access lines routing credentials instantly via terminal hardware.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Member Dashboard Preview Section -->
+  <section id="dashboard" class="relative py-20 lg:py-28 scroll-mt-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center max-w-xl mx-auto mb-14" data-reveal>
+        <span class="eyebrow"><i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i><span data-i18n="dash.eyebrow">SaaS Application Mock</span></span>
+        <h2 class="section-title" data-i18n="dash.title">Member Operations Console Layout</h2>
+        <p class="section-subtitle" data-i18n="dash.subtitle">An internal look inside the cloud platform workspace handling membership lifecycle profiles[cite: 4].</p>
+      </div>
+
+      <div class="glass rounded-[32px] p-6 max-w-4xl mx-auto shadow-glass grid md:grid-cols-3 gap-6 reveal" data-reveal>
+        <div class="md:col-span-1 space-y-4 border-b md:border-b-0 md:border-r border-dark-100 dark:border-white/5 pb-6 md:pb-0 md:pr-6 rtl:md:border-r-0 rtl:md:border-l rtl:md:pr-0 rtl:md:pl-6 flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 p-2 bg-brand-500/10 rounded-xl">
+              <span class="w-5 h-5 rounded-md bg-brand-500 text-white text-[9px] font-bold flex items-center justify-center font-mono">QR</span>
+              <div>
+                <p class="text-xs font-bold text-dark-900 dark:text-white" data-i18n="dash.qr">Hardware Check-In Token</p>
+                <p class="text-[9px] font-mono text-brand-500 tracking-wider" data-i18n="dash.qrStatus">STATUS: ACTIVE VALID</p>
+              </div>
+            </div>
+            <div class="p-3 bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-xl text-center">
+              <span class="inline-block p-2 bg-white dark:bg-dark-950 rounded-lg border border-dark-100 dark:border-white/5 shadow-sm"><i data-lucide="qr-code" class="w-16 h-16 text-dark-900 dark:text-white mx-auto"></i></span>
+              <p class="text-[9px] text-dark-400 uppercase tracking-widest mt-2 font-mono" data-i18n="dash.qrRefresh">Token Refreshing: 14s</p>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-dark-100 dark:border-white/5 text-[11px] text-dark-500 dark:text-dark-400 space-y-1.5 font-mono">
+            <p><span class="font-sans font-bold text-dark-800 dark:text-dark-200" data-i18n="dash.s">Membership Status:</span> <span data-i18n="dash.sVal">ELITE ACTIVE</span></p>
+            <p><span class="font-sans font-bold text-dark-800 dark:text-dark-200" data-i18n="dash.e">Expiry Vector:</span> 2027-12-31</p>
+          </div>
+        </div>
+
+        <div class="md:col-span-2 grid sm:grid-cols-2 gap-4">
+          <div class="bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-2xl p-4">
+            <p class="text-[10px] uppercase font-bold tracking-wider text-dark-400 mb-3" data-i18n="dash.a">Attendance Index Frequency</p>
+            <div class="cell-grid">
+              <div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div><div class="cell-unit"></div><div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div><div class="cell-unit"></div>
+              <div class="cell-unit cell-active"></div><div class="cell-unit"></div><div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div><div class="cell-unit"></div><div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div>
+              <div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div><div class="cell-unit"></div><div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div>
+              <div class="cell-unit"></div><div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div><div class="cell-unit cell-active"></div><div class="cell-unit"></div><div class="cell-unit cell-active"></div>
+            </div>
+            <p class="text-[9px] text-dark-400 mt-3 font-mono" data-i18n="dash.aSub">22 sessions checked during active cycle</p>
+          </div>
+
+          <div class="bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-2xl p-4 flex flex-col justify-between">
+            <div>
+              <p class="text-[10px] uppercase font-bold tracking-wider text-dark-400 mb-1" data-i18n="dash.p">Workout Progress Scale</p>
+              <h4 class="font-display font-bold text-2xl text-dark-900 dark:text-white font-mono">+12.4%</h4>
+            </div>
+            <div class="w-full h-1.5 bg-dark-100 dark:bg-dark-800 rounded-full overflow-hidden mt-4">
+              <div class="h-full w-[78%] bg-brand-500 rounded-full shadow-glow"></div>
+            </div>
+            <p class="text-[9px] text-dark-400 mt-2 font-mono" data-i18n="dash.pSub">78% of lifecycle milestone achieved</p>
+          </div>
+
+          <div class="bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-2xl p-4 sm:col-span-2 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <i data-lucide="flame" class="w-5 h-5 text-brand-500"></i>
+              <div>
+                <p class="text-xs font-bold text-dark-900 dark:text-white" data-i18n="dash.c">Dynamic Caloric Archival Tracker</p>
+                <p class="text-[10px] text-dark-400 font-mono" data-i18n="dash.cSub">682 / 2400 kcal logged today</p>
+              </div>
+            </div>
+            <span class="text-xs font-mono font-bold text-brand-500 bg-brand-500/10 px-2.5 py-1 rounded-lg" data-i18n="dash.stream">Realtime Stream</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- User Reviews Section -->
+  <section id="testimonials" class="relative py-20 lg:py-28 scroll-mt-16 bg-dark-50/50 dark:bg-dark-900/20 border-t border-dark-100 dark:border-white/5">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center max-w-xl mx-auto mb-14" data-reveal>
+        <span class="eyebrow"><i data-lucide="message-square" class="w-3.5 h-3.5"></i><span data-i18n="test.eyebrow">Audit Feedback</span></span>
+        <h2 class="section-title" data-i18n="test.title">Verified Platform Encounters</h2>
+        <p class="section-subtitle" data-i18n="test.subtitle">True, unfiltered operational feedback compiled straight from active terminal member logs[cite: 4].</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Review 1 -->
+        <div class="glass rounded-3xl p-5 hover-lift reveal" data-reveal>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-7 h-7 rounded-lg bg-brand-500/10 text-brand-500 font-bold text-xs flex items-center justify-center font-display">AH</span>
+            <p class="font-display font-bold text-xs text-dark-900 dark:text-white">Ahmed H.</p>
+          </div>
+          <div class="flex gap-0.5 text-amber-400 mb-2"><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i></div>
+          <p class="text-[11px] text-dark-500 dark:text-dark-400 leading-relaxed italic" data-i18n="test.r1">"The live capacity tracking transforms how I coordinate sessions. Zero floor crowding[cite: 4]."</p>
+        </div>
+        <!-- Review 2 -->
+        <div class="glass rounded-3xl p-5 hover-lift reveal" data-reveal data-reveal-delay="50">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-7 h-7 rounded-lg bg-brand-500/10 text-brand-500 font-bold text-xs flex items-center justify-center font-display">MK</span>
+            <p class="font-display font-bold text-xs text-dark-900 dark:text-white">Mona K.</p>
+          </div>
+          <div class="flex gap-0.5 text-amber-400 mb-2"><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i></div>
+          <p class="text-[11px] text-dark-500 dark:text-dark-400 leading-relaxed italic" data-i18n="test.r2">"Extremely clean premium aesthetic. The digital onboarding dashboard layout is absolute luxury[cite: 4]."</p>
+        </div>
+        <!-- Review 3 -->
+        <div class="glass rounded-3xl p-5 hover-lift reveal" data-reveal data-reveal-delay="100">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-7 h-7 rounded-lg bg-brand-500/10 text-brand-500 font-bold text-xs flex items-center justify-center font-display">SA</span>
+            <p class="font-display font-bold text-xs text-dark-900 dark:text-white">Sara A.</p>
+          </div>
+          <div class="flex gap-0.5 text-amber-400 mb-2"><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i></div>
+          <p class="text-[11px] text-dark-500 dark:text-dark-400 leading-relaxed italic" data-i18n="test.r3">"The integrated caloric and BMI calculators are remarkably smooth. Production quality software[cite: 4]."</p>
+        </div>
+        <!-- Review 4 -->
+        <div class="glass rounded-3xl p-5 hover-lift reveal" data-reveal data-reveal-delay="150">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-7 h-7 rounded-lg bg-brand-500/10 text-brand-500 font-bold text-xs flex items-center justify-center font-display">RM</span>
+            <p class="font-display font-bold text-xs text-dark-900 dark:text-white">Ramy M.</p>
+          </div>
+          <div class="flex gap-0.5 text-amber-400 mb-2"><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i><i data-lucide="star" class="w-3 h-3 fill-current"></i></div>
+          <p class="text-[11px] text-dark-500 dark:text-dark-400 leading-relaxed italic" data-i18n="test.r4">"Upgrading to Elite was seamless. My coach uses the internal biometric metrics file architecture daily[cite: 4]."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="relative py-20 lg:py-28 scroll-mt-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="reveal text-center max-w-xl mx-auto mb-14" data-reveal>
+        <span class="eyebrow"><i data-lucide="mail" class="w-3.5 h-3.5"></i><span data-i18n="contact.eyebrow">Communications Node</span></span>
+        <h2 class="section-title" data-i18n="contact.title">Establish Connection Parameters</h2>
+        <p class="section-subtitle" data-i18n="contact.subtitle">Route your connection payload straight into our management interface matrix instantly[cite: 4].</p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6 items-start">
+        <div class="glass rounded-3xl p-6 space-y-6 reveal" data-reveal>
+          <div class="flex items-start gap-4">
+            <i data-lucide="phone" class="w-4 h-4 text-brand-500 mt-1"></i>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-dark-400" data-i18n="contact.ph">Phone Vector</p>
+              <p class="text-sm font-bold font-mono text-dark-900 dark:text-white mt-1">+20 123 456 7890</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <i data-lucide="map-pin" class="w-4 h-4 text-brand-500 mt-1"></i>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-dark-400" data-i18n="contact.loc">Coordinates Location</p>
+              <p class="text-sm text-dark-800 dark:text-dark-200 mt-1" data-i18n="contact.locd">El-Tahrir Axis, Giza, Egypt</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <i data-lucide="clock" class="w-4 h-4 text-brand-500 mt-1"></i>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-dark-400" data-i18n="contact.hrs">Operational Hours</p>
+              <p class="text-sm text-dark-800 dark:text-dark-200 mt-1" data-i18n="contact.hrsd">24/7/365 Non-Stop Execution</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2 glass rounded-3xl p-6 reveal" data-reveal data-reveal-delay="50">
+          <form id="contact-form" class="space-y-4" onsubmit="event.preventDefault(); alert('Transmission uplink secure.');">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-dark-400 mb-1" for="form-name" data-i18n="contact.name">Identity Label</label>
+                <input id="form-name" type="text" required placeholder="John Doe" class="w-full bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:border-brand-500 focus:outline-none transition-colors" />
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-dark-400 mb-1" for="form-phone" data-i18n="contact.phone">Phone Payload</label>
+                <input id="form-phone" type="tel" required placeholder="+20..." class="w-full bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:border-brand-500 focus:outline-none transition-colors" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-dark-400 mb-1" for="form-msg" data-i18n="contact.msg">Transmission Text</label>
+              <textarea id="form-msg" required rows="4" placeholder="Enter message text data parameters..." class="w-full bg-dark-50/50 dark:bg-dark-900/40 border border-dark-100 dark:border-white/5 rounded-xl px-4 py-3 text-sm focus:border-brand-500 focus:outline-none transition-colors"></textarea>
+            </div>
+            <button type="submit" class="w-full h-11 rounded-xl bg-brand-500 text-white text-xs font-bold uppercase tracking-wider hover:bg-brand-600 transition-colors shadow-glow" data-i18n="contact.submit">Dispatch Connection Request</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Blueprint -->
+  <footer class="relative border-t border-dark-100 dark:border-white/5 bg-dark-50/20 dark:bg-dark-950 py-8 text-xs text-dark-400">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="font-mono" data-i18n="footer.copy">&copy; 2026 Kilini Gym. System Operations Secure.</p>
+      <p class="font-sans">
+        <span data-i18n="footer.designer">Designed & Engineered by</span> 
+        <a href="https://mohamed-hatem-web.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:underline font-bold">
+          Mohamed Hatem[cite: 4]
+        </a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Floating Badge -->
+  <div id="designer-floating-badge" class="fixed bottom-20 right-6 z-[80] transform translate-y-24 opacity-0 transition-all duration-500 ease-out pointer-events-none">
+    <a href="https://mohamed-hatem-web.vercel.app/" target="_blank" rel="noopener noreferrer" class="pointer-events-auto flex items-center gap-2.5 px-4 py-2.5 rounded-full border shadow-xl bg-white/70 dark:bg-dark-900/70 border-brand-500/30 text-slate-800 dark:text-white backdrop-blur-md hover:-translate-y-1 hover:shadow-brand-500/20 active:translate-y-0 transition-all group font-sans text-xs font-semibold tracking-wide">
+      <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+      <span>
+        <span data-i18n="footer.designer">Designed & Engineered by</span>
+        <span class="text-brand-500 dark:text-accent-400 font-bold group-hover:underline">
+          Mohamed Hatem[cite: 4]
+        </span>
+      </span>
+      <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-brand-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+    </a>
+  </div>
+
+  <!-- JAVASCRIPT ENGINE WITH EXTENDED MULTI-LANGUAGE SYSTEM -->
+  <script>
+    // قاموس الترجمة الشامل لكل نص وكل حرف في واجهة المستخدم
+    const i18n = {
+      en: {
+        'global.loading': 'Loading Ecosystem',
+        'nav.status': 'Live Status', 'nav.plans': 'Memberships', 'nav.coaches': 'Coaches', 'nav.tools': 'Tools', 'nav.schedule': 'Schedule', 'nav.dashboard': 'Dashboard', 'nav.contact': 'Contact', 'nav.join': 'Join Now',
+        'hero.badge': 'The Next Gen Fitness Standard',
+        'hero.subtitle': 'The Future of Fitness Starts Here. Experience a seamless fusion of luxury training, live tracking metrics, and custom high-performance management architecture.',
+        'hero.btnJoin': 'Join Now', 'hero.btnExplore': 'Explore Memberships',
+        'hero.chip1': 'Energy Burned', 'hero.chip1Val': '542 kcal', 'hero.dashGreeting': 'System Active', 'hero.dashId': 'Member Core ID', 'hero.dashGoalTitle': 'Weekly Target Progress', 'hero.dashGoalSub': '15 of 20 targets unlocked',
+        'hero.pulse': 'Pulse', 'hero.pulseVal': '134 bpm', 'hero.hydration': 'Hydration', 'hero.hydrationVal': '2.8 Liters', 'hero.duration': 'Duration', 'hero.durationVal': '45 min',
+        'status.eyebrow': 'Smart Gym Status', 'status.title': 'Live Operational Metrics', 'status.subtitle': 'Real-time status loops track live occupancy, space utilization, and traffic curves instantly.',
+        'status.live': 'Live Traffic Feed', 'status.mod': 'Moderate Traffic', 'status.capacity': 'Capacity', 'status.light': '🟢 Light Traffic', 'status.moderate': '🟡 Moderate Traffic', 'status.peak': '🔴 Peak Hours',
+        'status.inside': 'Current Members Inside', 'status.utilization': 'Gym Floor Capacity', 'status.active': 'Active Memberships Registered', 'status.new': 'New Registrations This Week', 'status.optimal': 'Optimal', 'status.record': 'Record', 'status.chart': 'Hourly Space Allocation Index',
+        'days.mon': 'Mon', 'days.tue': 'Tue', 'days.wed': 'Wed', 'days.thu': 'Thu', 'days.fri': 'Fri', 'days.sat': 'Sat', 'days.sun': 'Sun',
+        'plans.eyebrow': 'Tier Framework', 'plans.title': 'Premium Membership Tiers', 'plans.subtitle': 'Select an architecture tier optimized for your lifecycle metrics. No hidden fees.',
+        'plans.b.title': 'Basic Tier', 'plans.price.29': '$29', 'plans.perMonth': '/ month', 'plans.b.f1': 'Standard Gym Floor Access', 'plans.b.f2': 'Digital App Access Matrix', 'plans.b.f3': 'Locker Room Operational Access', 'plans.b.f4': 'Personal Training Modules', 'plans.cta': 'Select Engine Tier',
+        'plans.recommended': 'Highly Recommended', 'plans.e.title': 'Elite Tier', 'plans.price.89': '$89', 'plans.e.f1': '24/7 Multi-Facility Access', 'plans.e.f2': '4 Private Coach Sessions / Mo', 'plans.e.f3': 'Custom Dynamic Nutrition Modules', 'plans.e.f4': 'Priority Live Class Booking Vector',
+        'plans.p.title': 'Premium Tier', 'plans.price.54': '$54', 'plans.p.f1': 'Complete Floor Access Core', 'plans.p.f2': 'Unlimited Integrated Group Classes', 'plans.p.f3': '1 Managed Coach Session / Mo', 'plans.p.f4': 'Biometric Tracking Audits',
+        'coaches.eyebrow': 'Performance Masters', 'coaches.title': 'Certified Biometric Engineers', 'coaches.subtitle': 'Data-driven human performance instructors handling optimization mechanics. No arbitrary stock faces.',
+        'coaches.c1.name': 'Ahmed Hassan', 'coaches.c1.spec': 'Strength Architecture', 'coaches.c1.exp': '9+ Years Exp',
+        'coaches.c2.name': 'Mona Khaled', 'coaches.c2.spec': 'Mobility Systems', 'coaches.c2.exp': '7+ Years Exp',
+        'coaches.c3.name': 'Sara Ali', 'coaches.c3.spec': 'High-Intensity Matrix', 'coaches.c3.exp': '6+ Years Exp',
+        'coaches.c4.name': 'Ramy Mostafa', 'coaches.c4.spec': 'Combat Optimization', 'coaches.c4.exp': '11+ Years Exp',
+        'trans.eyebrow': 'Data Verification', 'trans.title': 'Transformation Architecture Logs', 'trans.subtitle': 'Verified internal biometric reports mapped chronologically from deployment status down to execution metrics.',
+        'trans.elite': 'Elite Token Member', 'trans.premium': 'Premium Token Member', 'trans.before': 'Before', 'trans.after': 'After', 'trans.lost': 'Mass lost', 'trans.gain': 'Hypertrophy', 'trans.muscleGain': 'Muscle gain', 'trans.bf': 'Adipose index', 'trans.dur': 'Runtime',
+        'weight.96': '96kg', 'weight.78': '78kg', 'weight.68': '68kg', 'weight.61': '61kg', 'weight.74': '74kg', 'weight.85': '85kg', 'weight.minus18': '-18kg', 'weight.plus4': '+4kg', 'weight.minus7': '-7kg', 'weight.plus2': '+2kg', 'weight.plus11': '+11kg', 'weight.minus4': '-4%',
+        'trans.runtime.6': '6 Mo', 'trans.runtime.4': '4 Mo', 'trans.runtime.8': '8 Mo',
+        'tools.eyebrow': 'Digital Engine Lab', 'tools.title': 'Integrated Biometric Processors', 'tools.subtitle': 'Instant execution calculators engineered to compile systemic metrics directly from raw data inputs[cite: 4].',
+        'tools.tabBmi': 'BMI Module', 'tools.tabCal': 'TDEE Caloric Matrix', 'tools.tabWater': 'Hydration Volumizer',
+        'tools.w': 'Mass (kg)', 'tools.h': 'Stature (cm)', 'tools.age': 'Age (Yrs)', 'tools.gen': 'Gender Vector', 'tools.m': 'Male Core', 'tools.f': 'Female Core', 'tools.calc': 'Compile Metrics', 'tools.out': 'Index Output Score',
+        'tools.lose': 'Cut', 'tools.maint': 'Maintain', 'tools.bulk': 'Bulk', 'tools.h2o': 'Required Allocation Vector',
+        'schedule.eyebrow': 'Time Grid Matrix', 'schedule.title': 'Operational Framework Timetable', 'schedule.subtitle': 'Live scheduling channels for high-capacity system modules[cite: 4]. Reserve seats instantly.',
+        'schedule.m': 'Monday', 'schedule.tu': 'Tuesday', 'schedule.w': 'Wednesday', 'schedule.th': 'Thursday', 'schedule.f': 'Friday',
+        'classes.crossfit': 'CrossFit Core', 'classes.hiit': 'HIIT System', 'classes.zumba': 'Zumba Module', 'classes.boxing': 'Boxing Vector', 'classes.functional': 'Functional Training',
+        'gallery.eyebrow': 'Facility Vectors', 'gallery.title': 'Production-Floor Environment Architectural Blueprint', 'gallery.subtitle': 'Raw spatial records detailing true, verified training installations[cite: 4]. No abstract graphics.',
+        'gallery.item1': 'Main Training Floor', 'gallery.item2': 'Free Weights Area', 'gallery.item3': 'Plate-Loaded Equipment', 'gallery.item4': 'Dumbbell Wall', 'gallery.item5': 'Cardio Zone', 'gallery.item6': 'Functional Training Kit',
+        'why.eyebrow': 'Platform Mechanics', 'why.title': 'Engineered Structural Foundations', 'why.subtitle': 'Why Kilini Gym rules fitness computation metrics[cite: 4]. Integrated system deployment modules built for scaling.',
+        'why.f1.t': 'Certified Biometric Coaches', 'why.f1.d': 'Elite performance monitors analyzing real internal tracking files directly[cite: 4].',
+        'why.f2.t': 'Premium Kinetic Infrastructure', 'why.f2.d': 'Calibrated machinery setups streaming real resistance loads into digital processing channels.',
+        'why.f3.t': 'Dynamic Nutrient Allocation', 'why.f3.d': 'Automated algorithmic breakdown frameworks targeting specified metabolic profiles.',
+        'why.f4.t': 'SaaS Peer Ecosystem', 'why.f4.d': 'High-performance networks logging community target milestones synchronously.',
+        'why.f5.t': 'Granular Metric Tracking', 'why.f5.d': 'End-to-end data archival processes compiling progress charts directly to storage arrays.',
+        'why.f6.t': 'Instant Access Gateways', 'why.f6.d': 'Automated token validation access lines routing credentials instantly via terminal hardware.',
+        'dash.eyebrow': 'SaaS Application Mock', 'dash.title': 'Member Operations Console Layout', 'dash.subtitle': 'An internal look inside the cloud platform workspace handling membership lifecycle profiles[cite: 4].',
+        'dash.qr': 'Hardware Check-In Token', 'dash.qrStatus': 'STATUS: ACTIVE VALID', 'dash.qrRefresh': 'Token Refreshing: 14s', 'dash.s': 'Membership Status:', 'dash.sVal': 'ELITE ACTIVE', 'dash.e': 'Expiry Vector:', 'dash.a': 'Attendance Index Frequency', 'dash.aSub': '22 sessions checked during active cycle', 'dash.p': 'Workout Progress Scale', 'dash.pSub': '78% of lifecycle milestone achieved', 'dash.c': 'Dynamic Caloric Archival Tracker', 'dash.cSub': '682 / 2400 kcal logged today', 'dash.stream': 'Realtime Stream',
+        'test.eyebrow': 'Audit Feedback', 'test.title': 'Verified Platform Encounters', 'test.subtitle': 'True, unfiltered operational feedback compiled straight from active terminal member logs[cite: 4].',
+        'test.r1': '"The live capacity tracking transforms how I coordinate sessions. Zero floor crowding[cite: 4]."',
+        'test.r2': '"Extremely clean premium aesthetic. The digital onboarding dashboard layout is absolute luxury[cite: 4]."',
+        'test.r3': '"The integrated caloric and BMI calculators are remarkably smooth. Production quality software[cite: 4]."',
+        'test.r4': '"Upgrading to Elite was seamless. My coach uses the internal biometric metrics file architecture daily[cite: 4]."',
+        'contact.eyebrow': 'Communications Node', 'contact.title': 'Establish Connection Parameters', 'contact.subtitle': 'Route your connection payload straight into our management interface matrix instantly[cite: 4].',
+        'contact.ph': 'Phone Vector', 'contact.loc': 'Coordinates Location', 'contact.locd': 'El-Tahrir Axis, Giza, Egypt', 'contact.hrs': 'Operational Hours', 'contact.hrsd': '24/7/365 Non-Stop Execution',
+        'contact.name': 'Identity Label', 'contact.phone': 'Phone Payload', 'contact.msg': 'Transmission Text', 'contact.submit': 'Dispatch Connection Request',
+        'footer.copy': '© 2026 Kilini Gym. System Operations Secure.', 'footer.designer': 'Designed & Engineered by'
+      },
+      ar: {
+        'global.loading': 'جاري تحميل النظام',
+        'nav.status': 'الحالة المباشرة', 'nav.plans': 'العضوية', 'nav.coaches': 'المدربون', 'nav.tools': 'الأدوات', 'nav.schedule': 'الجدول', 'nav.dashboard': 'لوحة التحكم', 'nav.contact': 'الاتصال', 'nav.join': 'انضم الآن',
+        'hero.badge': 'المعيار الجديد للياقة البدنية القادمة',
+        'hero.subtitle': 'مستقبل اللياقة البدنية يبدأ من هنا. اختبر اندماجاً سلساً بين التدريب الفاخر ومقاييس التتبع المباشرة وهندسة الإدارة المخصصة عالية الأداء.',
+        'hero.btnJoin': 'انضم الآن', 'hero.btnExplore': 'استكشف العضويات',
+        'hero.chip1': 'الطاقة المستهلكة', 'hero.chip1Val': '542 سعرة', 'hero.dashGreeting': 'النظام نشط', 'hero.dashId': 'معرف العضو الأساسي', 'hero.dashGoalTitle': 'التقدم نحو الهدف الأسبوعي', 'hero.dashGoalSub': 'تم فتح 15 من أصل 20 هدفاً',
+        'hero.pulse': 'النبض', 'hero.pulseVal': '134 نبضة/د', 'hero.hydration': 'الترطيب', 'hero.hydrationVal': '2.8 لتر', 'hero.duration': 'المدة', 'hero.durationVal': '45 دقيقة',
+        'status.eyebrow': 'حالة الصالة الذكية', 'status.title': 'مقاييس التشغيل المباشرة', 'status.subtitle': 'حلقات الحالة المباشرة تتتبع الإشغال الفعلي، واستغلال المساحة، ومنحنيات الحركة فورياً.',
+        'status.live': 'بث الحركة المباشر', 'status.mod': 'حركة متوسطة', 'status.capacity': 'الاستيعاب', 'status.light': '🟢 حركة خفيفة', 'status.moderate': '🟡 حركة متوسطة', 'status.peak': '🔴 ساعات الذروة',
+        'status.inside': 'الأعضاء المتواجدون حالياً', 'status.utilization': 'قدرة استيعاب صالة التمرين', 'status.active': 'العضويات النشطة المسجلة', 'status.new': 'التسجيلات الجديدة هذا الأسبوع', 'status.optimal': 'مثالي', 'status.record': 'رقم قياسي', 'status.chart': 'مؤشر توزيع المساحة الساعي',
+        'days.mon': 'الإثنين', 'days.tue': 'الثلاثاء', 'days.wed': 'الأربعاء', 'days.thu': 'الخميس', 'days.fri': 'الجمعة', 'days.sat': 'السبت', 'days.sun': 'الأحد',
+        'plans.eyebrow': 'إطار العمل', 'plans.title': 'فئات العضوية الفاخرة', 'plans.subtitle': 'اختر الفئة البرمجية المحسّنة لتناسب مقاييس دورة حياتك التدريبية. لا توجد رسوم مخفية.',
+        'plans.b.title': 'الفئة الأساسية', 'plans.price.29': '29$', 'plans.perMonth': '/ شهرياً', 'plans.b.f1': 'دخول قياسي لصالة التمرين', 'plans.b.f2': 'مصفوفة الوصول للتطبيق الرقمي', 'plans.b.f3': 'الوصول التشغيلي لغرفة الخزائن', 'plans.b.f4': 'وحدات التدريب الشخصي', 'plans.cta': 'اختر هذه الفئة',
+        'plans.recommended': 'موصى به بشدة', 'plans.e.title': 'الفئة النخبوية', 'plans.price.89': '89$', 'plans.e.f1': 'وصول للمرافق على مدار الساعة 24/7', 'plans.e.f2': '4 جلسات مدرب خاص / شهرياً', 'plans.e.f3': 'وحدات تغذية ديناميكية مخصصة', 'plans.e.f4': 'متجه حجز الحصص المباشرة ذو الأولوية',
+        'plans.p.title': 'الفئة الممتازة', 'plans.price.54': '54$', 'plans.p.f1': 'وصول كامل للصالة الأساسية', 'plans.p.f2': 'حصص جماعية متكاملة غير محدودة', 'plans.p.f3': '1 جلسة مدرب مدارة / شهرياً', 'plans.p.f4': 'تدقيق تتبع القياسات الحيوية',
+        'coaches.eyebrow': 'أسياد الأداء', 'coaches.title': 'مهندسو القياسات الحيوية المعتمدون', 'coaches.subtitle': 'مدربو أداء بشري يعتمدون على البيانات للتعامل مع آليات التحسين الفردية.',
+        'coaches.c1.name': 'أحمد حسن', 'coaches.c1.spec': 'بنية القوة البدنية', 'coaches.c1.exp': 'خبرة +9 سنوات',
+        'coaches.c2.name': 'منى خالد', 'coaches.c2.spec': 'أنظمة الحركية والمرونة', 'coaches.c2.exp': 'خبرة +7 سنوات',
+        'coaches.c3.name': 'سارة علي', 'coaches.c3.spec': 'مصفوفة التدريب مكثف الأداء', 'coaches.c3.exp': 'خبرة +6 سنوات',
+        'coaches.c4.name': 'رامي مصطفى', 'coaches.c4.spec': 'تحسين الفنون القتالية', 'coaches.c4.exp': 'خبرة +11 سنة',
+        'trans.eyebrow': 'التحقق من البيانات', 'trans.title': 'سجلات هندسة التحول البدني', 'trans.subtitle': 'تقارير القياسات الحيوية الداخلية المعتمدة والمخططة زمنياً من حالة النشر حتى مقاييس التنفيذ.',
+        'trans.elite': 'عضو النخبة الرقمي', 'trans.premium': 'العضو المميز الرقمي', 'trans.before': 'قبل', 'trans.after': 'بعد', 'trans.lost': 'الوزن المفقود', 'trans.gain': 'الضخامة العضلية', 'trans.muscleGain': 'كتلة عضلية مكتسبة', 'trans.bf': 'مؤشر الدهون', 'trans.dur': 'مدة التشغيل',
+        'weight.96': '96 كجم', 'weight.78': '78 كجم', 'weight.68': '68 كجم', 'weight.61': '61 كجم', 'weight.74': '74 كجم', 'weight.85': '85 كجم', 'weight.minus18': '-18 كجم', 'weight.plus4': '+4 كجم', 'weight.minus7': '-7 كجم', 'weight.plus2': '+2 كجم', 'weight.plus11': '+11 كجم', 'weight.minus4': '-4%',
+        'trans.runtime.6': '6 أشهر', 'trans.runtime.4': '4 أشهر', 'trans.runtime.8': '8 أشهر',
+        'tools.eyebrow': 'مختبر المحرك الرقمي', 'tools.title': 'معالجات القياسات الحيوية المتكاملة', 'tools.subtitle': 'حاسبات فورية هندسية لتجميع المقاييس الجهازية مباشرة من مدخلات البيانات الخام[cite: 4].',
+        'tools.tabBmi': 'وحدة الـ BMI', 'tools.tabCal': 'مصفوفة السعرات TDEE', 'tools.tabWater': 'حاسبة الترطيب وحجم الماء',
+        'tools.w': 'الكتلة (كجم)', 'tools.h': 'الطول (سم)', 'tools.age': 'العمر (بالسنوات)', 'tools.gen': 'متجه الجنس', 'tools.m': 'ذكر', 'tools.f': 'أنثى', 'tools.calc': 'احسب المؤشرات', 'tools.out': 'مؤشر النتيجة المخرجة',
+        'tools.lose': 'تنشيف', 'tools.maint': 'المحافظة', 'tools.bulk': 'تضخيم', 'tools.h2o': 'متجه الحصة المائية المطلوبة',
+        'schedule.eyebrow': 'مصفوفة الشبكة الزمنية', 'schedule.title': 'جدول الإطار التشغيلي', 'schedule.subtitle': 'قنوات الجدولة المباشرة لوحدات النظام عالية السعة[cite: 4]. احجز مقعدك فوراً.',
+        'schedule.m': 'الإثنين', 'schedule.tu': 'الثلاثاء', 'schedule.w': 'الأربعاء', 'schedule.th': 'الخميس', 'schedule.f': 'الجمعة',
+        'classes.crossfit': 'كورس كروس فت', 'classes.hiit': 'نظام الـ HIIT', 'classes.zumba': 'وحدة الزومبا', 'classes.boxing': 'كورس الملاكمة', 'classes.functional': 'التدريب الوظيفي',
+        'gallery.eyebrow': 'متجهات المرافق', 'gallery.title': 'المخطط المعماري لبيئة صالة الإنتاج والتدريب', 'gallery.subtitle': 'سجلات مكانية خام توضح منشآت التدريب الحقيقية والمعتمدة[cite: 4]. لا توجد رسومات مجردة.',
+        'gallery.item1': 'أرضية التدريب الرئيسية', 'gallery.item2': 'منطقة الأوزان الحرة', 'gallery.item3': 'معدات الأوزان المحملة', 'gallery.item4': 'جدار الدمبلز المعاير', 'gallery.item5': 'منطقة الكارديو', 'gallery.item6': 'حقيبة التدريب الوظيفي',
+        'why.eyebrow': 'آليات المنصة', 'why.title': 'الأسس الهيكلية الهندسية', 'why.subtitle': 'لماذا تقود Kilini Gym مقاييس الحوسبة الرياضية[cite: 4]. وحدات نشر متكاملة مبنية للتوسع.',
+        'why.f1.t': 'مدربو قياسات حيوية معتمدون', 'why.f1.d': 'مراقبو أداء متميزون يحللون ملفات التتبع الداخلية الفعليّة مباشرة[cite: 4].',
+        'why.f2.t': 'بنية تحتية حركية فاخرة', 'why.f2.d': 'آلات معايرة تضخ أحمال المقاومة الحقيقية مباشرة إلى قنوات المعالجة الرقمية.',
+        'why.f3.t': 'تخصيص المغذيات الديناميكي', 'why.f3.d': 'أطر تحليل خوارزمية مؤتمتة تستهدف ملفات التعريف الأيضية المحددة.',
+        'why.f4.t': 'النظام البيئي للأقران (SaaS)', 'why.f4.d': 'شبكات عالية الأداء تسجل إنجازات أهداف المجتمع بشكل متزامن.',
+        'why.f5.t': 'تتبع دقيق للمقاييس', 'why.f5.d': 'عمليات أرشفة بيانات شاملة تقوم بتجميع مخططات التقدم مباشرة في المصفوفات التخزينية.',
+        'why.f6.t': 'بوابات الوصول الفوري', 'why.f6.d': 'خطوط التحقق المؤتمتة من الرموز لتوجيه أوراق الاعتماد فوراً عبر أجهزة النظم.',
+        'dash.eyebrow': 'نموذج تطبيق SaaS', 'dash.title': 'تخطيط وحدة التحكم بعمليات الأعضاء', 'dash.subtitle': 'نظرة داخلية على مساحة عمل المنصة السحابية التي تدير ملفات دورة حياة العضوية[cite: 4].',
+        'dash.qr': 'رمز تسجيل الدخول عبر الأجهزة', 'dash.qrStatus': 'الحالة: الرمز فعال وصالح', 'dash.qrRefresh': 'تحديث الرمز خلال: 14 ثانية', 'dash.s': 'حالة العضوية:', 'dash.sVal': 'نخبوية نشطة', 'dash.e': 'متجه انتهاء الصلاحية:', 'dash.a': 'تردد مؤشر الحضور', 'dash.aSub': 'تم فحص 22 جلسة خلال الدورة النشطة', 'dash.p': 'مقياس تقدم التمرين', 'dash.pSub': 'تم تحقيق 78% من المرحلة الرئيسية لدورة الحياة', 'dash.c': 'متبع أرشفة السعرات الحرارية الديناميكي', 'dash.cSub': 'تم تسجيل 682 / 2400 سعرة اليوم', 'dash.stream': 'بث حي ومباشر',
+        'test.eyebrow': 'ملاحظات التدقيق', 'test.title': 'تجارب المنصة المعتمدة', 'test.subtitle': 'تعليقات تشغيلية حقيقية وغير مصفاة تم تجميعها مباشرة من سجلات الأعضاء النشطين[cite: 4].',
+        'test.r1': '"تتبع القدرة الاستيعابية المباشر يغير طريقة تنسيقي للحصص تماماً. صالة خالية من الازدحام[cite: 4]."',
+        'test.r2': '"جمالية فاخرة ونظيفة للغاية. تصميم لوحة التحكم الرقمية يمثل قمة الرفاهية[cite: 4]."',
+        'test.r3': '"حاسبات السعرات الحرارية والـ BMI المتكاملة تعمل بسلاسة ملحوظة. برمجيات ذات جودة إنتاجية عالية[cite: 4]."',
+        'test.r4': '"الترقية إلى باقة النخبة كانت سلسة. مدربي يستخدم بنية ملفات القياسات الحيوية يومياً[cite: 4]."',
+        'contact.eyebrow': 'عقدة الاتصالات', 'contact.title': 'تحديد معاملات الاتصال', 'contact.subtitle': 'قم بتوجيه حمولة بيانات الاتصال الخاصة بك مباشرة إلى مصفوفة واجهة الإدارة لدينا فوراً[cite: 4].',
+        'contact.ph': 'متجه الهاتف', 'contact.loc': 'موقع الإحداثيات', 'contact.locd': 'محور التحرير، الجيزة، مصر', 'contact.hrs': 'ساعات العمل تشغيلياً', 'contact.hrsd': 'تنفيذ مستمر 24/7/365 بدون توقف',
+        'contact.name': 'تسمية الهوية', 'contact.phone': 'بيانات الهاتف', 'contact.msg': 'نص رسالة الإرسال', 'contact.submit': 'إرسال طلب الاتصال',
+        'footer.copy': '© 2026 Kilini Gym. العمليات الأمنية للنظام محمية.', 'footer.designer': 'تم التصميم والهندسة بواسطة'
+      }
+    };
+
+    // مصفوفة معالجة تبديل اللغات لـ "كل حرف وكل كلمة"
+    function updateLocalization(lang) {
+      const root = document.documentElement;
+      
+      // 1. تحديث السمات الأساسية للـ HTML لتتوافق مع معايير اللغة والاتجاه
+      root.setAttribute('lang', lang);
+      root.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+      
+      if (lang === 'ar') {
+        root.classList.add('font-arabic');
+      } else {
+        root.classList.remove('font-arabic');
+      }
+
+      // 2. تحديث العناصر التي تحمل خاصية data-i18n من خلال القاموس
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (i18n[lang][key]) {
+          // التحقق إذا كان العنصر عبارة عن حقل إدخال لتغيير الـ placeholder
+          if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+            element.setAttribute('placeholder', i18n[lang][key]);
+          } else {
+            element.innerText = i18n[lang][key];
+          }
+        }
+      });
+
+      // 3. تحديث نصوص الأزرار والمؤشرات الثابتة
+      document.getElementById('lang-toggle-label').innerText = lang === 'en' ? 'AR' : 'EN';
+    }
+
+    // إعداد مستمع الأحداث لزر تبديل اللغة
+    document.getElementById('lang-toggle').addEventListener('click', () => {
+      let currentLang = localStorage.getItem('zf-lang') || 'en';
+      let nextLang = currentLang === 'en' ? 'ar' : 'en';
+      
+      localStorage.setItem('zf-lang', nextLang);
+      updateLocalization(nextLang);
+      
+      // إعادة تحميل مكتبة الأيقونات للتأكد من ملاءمتها مع الاتجاه الجديد للاتساق البصري
+      if(window.lucide) { window.lucide.createIcons(); }
+    });
+
+    // تشغيل نظام الترجمة فور تحميل الصفحة بناءً على اللغة المخزنة
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('zf-lang') || 'en';
+      updateLocalization(savedLang);
+    });
+
+    // ----------------------------------------------------
+    // بقية محركات النظام (أدوات الحساب، التنسيقات، التحميل، المظهر الداكن)
+    // ----------------------------------------------------
+    
+    // إخفاء شاشة التحميل
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('loading-screen');
+      if (loader) {
+        loader.classList.add('opacity-0');
+        setTimeout(() => loader.remove(), 500);
+      }
+    });
+
+    // مراقبة شريط التقدم الفوقي عند التمرير
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('scroll-progress').style.width = scrolled + '%';
+      
+      // إظهار الشارة العائمة للمصمم عند التمرير لأسفل
+      const badge = document.getElementById('designer-floating-badge');
+      if (winScroll > 300) {
+        badge.classList.remove('translate-y-24', 'opacity-0');
+      } else {
+        badge.classList.add('translate-y-24', 'opacity-0');
+      }
+    });
+
+    // إدارة القائمة المستجيبة للهواتف المحمولة
+    document.getElementById('mobile-menu-toggle').addEventListener('click', () => {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+
+    // محرك تحويل المظهر الداكن والفاتح
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const root = document.documentElement;
+      if (root.classList.contains('dark')) {
+        root.classList.remove('dark');
+        localStorage.setItem('zf-theme', 'light');
+      } else {
+        root.classList.add('dark');
+        localStorage.setItem('zf-theme', 'dark');
+      }
+    });
+
+    // التبديل البرمجي بين بوابات الحاسبة الحيوية المتكاملة
+    document.querySelectorAll('.tool-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tool-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        document.querySelectorAll('.tool-panel').forEach(p => p.classList.add('hidden'));
+        document.getElementById('panel-' + tab.getAttribute('data-tab')).classList.remove('hidden');
+      });
+    });
+
+    // تنفيذ عمليات معالجة وحدة الـ BMI
+    document.getElementById('btn-bmi').addEventListener('click', () => {
+      const w = parseFloat(document.getElementById('bmi-w').value) || 75;
+      const h = parseFloat(document.getElementById('bmi-h').value) || 180;
+      const bmi = w / ((h / 100) * (h / 100));
+      document.getElementById('val-bmi').innerText = bmi.toFixed(1);
+      document.getElementById('res-bmi').classList.remove('hidden');
+    });
+
+    // تنفيذ عمليات معالجة مصفوفة السعرات TDEE
+    document.getElementById('btn-cal').addEventListener('click', () => {
+      const w = parseFloat(document.getElementById('cal-w').value) || 75;
+      const h = parseFloat(document.getElementById('cal-h').value) || 180;
+      const a = parseFloat(document.getElementById('cal-a').value) || 25;
+      const g = document.getElementById('cal-g').value;
+      
+      let bmr = (10 * w) + (6.25 * h) - (5 * a);
+      bmr = g === 'm' ? bmr + 5 : bmr - 161;
+      const maint = Math.round(bmr * 1.375);
+      
+      document.getElementById('val-cut').innerText = Math.round(maint * 0.8) + ' kcal';
+      document.getElementById('val-maint').innerText = maint + ' kcal';
+      document.getElementById('val-bulk').innerText = Math.round(maint * 1.15) + ' kcal';
+      document.getElementById('res-cal').classList.remove('hidden');
+    });
+
+    // تنفيذ عمليات معالجة وحدة الترطيب المائي
+    document.getElementById('btn-water').addEventListener('click', () => {
+      const w = parseFloat(document.getElementById('wat-w').value) || 75;
+      const liters = w * 0.035;
+      document.getElementById('val-water').innerText = liters.toFixed(1) + ' Liters';
+      document.getElementById('res-water').classList.remove('hidden');
+    });
+
+    // نظام كشف كتل عناصر العرض لتأثيرات الـ Reveal الأنيقة
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('show'); }
+      });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // تشغيل الأيقونات
+    if(window.lucide) { window.lucide.createIcons(); }
+  </script>
+</body>
+</html>
